@@ -252,14 +252,47 @@ struct Joint {
     }
 };
 
+struct BoneTracker : public Component
+{
+public:
+    lm::mat4 model_matrix;
+
+    void update(float dt);
+    void SetBone(const std::string & entity_name, const std::string & bone_name);
+    lm::mat4 getGlobalMatrix(Joint * bone);
+
+private:
+    Joint * bone;
+    int target_entity;
+};
+
 struct SkinnedMesh : public Mesh {
+
     lm::mat4 skin_bind_matrix;
     Joint* root;
     int num_joints = -1;
+
     void getAllJoints(Joint* current, std::vector<Joint*>& all_joints) {
+
         all_joints.push_back(current);
         for (auto& c : current->children)
             getAllJoints(c, all_joints);
+    }
+
+    Joint* GetBoneByName(const std::string & name)
+    {
+        std::vector<Joint*>& all_joints = std::vector<Joint*>();
+        getAllJoints(root, all_joints);
+
+        for (auto p : all_joints)
+        {
+            if (p->name == name)
+            {
+                return p;
+            }
+        }
+
+        return NULL;
     }
 };
 
@@ -275,7 +308,8 @@ std::vector<Collider>,
 std::vector<GUIElement>,
 std::vector<GUIText>,
 std::vector<Animation>,
-std::vector<SkinnedMesh>
+std::vector<SkinnedMesh>,
+std::vector<BoneTracker>
 > ComponentArrays;
 
 //way of mapping different types to an integer value i.e.
@@ -291,6 +325,7 @@ template<> struct type2int<GUIElement> { enum { result = 5 }; };
 template<> struct type2int<GUIText> { enum { result = 6 }; };
 template<> struct type2int<Animation> { enum { result = 7 }; };
 template<> struct type2int<SkinnedMesh> { enum { result = 8 }; };
+template<> struct type2int<BoneTracker> { enum { result = 9 }; };
 //UPDATE THIS!
 const int NUM_TYPE_COMPONENTS = 9;
 

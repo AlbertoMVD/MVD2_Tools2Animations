@@ -67,6 +67,11 @@ void AnimationSystem::update(float dt) {
         }
     }
 
+    //skinned mesh joints
+    auto& bonetrackers = ECS.getAllComponents<BoneTracker>();
+    for (auto& track : bonetrackers) {
+        track.update(dt);
+    }
     
     //skinned mesh joints
     auto& skinnedmeshes = ECS.getAllComponents<SkinnedMesh>();

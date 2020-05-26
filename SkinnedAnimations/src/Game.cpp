@@ -38,7 +38,15 @@ void Game::init(int w, int h) {
     
     Parsers::parseCollada("data/assets/Punching.dae", animation_shader, graphics_system_);
     
+    int knife_id = ECS.createEntity("knife");
+    Mesh& knife_mesh = ECS.createComponentForEntity<Mesh>(knife_id);
+    knife_mesh.geometry = graphics_system_.createGeometryFromFile("data/assets/knife.obj");
+    knife_mesh.material = graphics_system_.createMaterial();
+    graphics_system_.getMaterial(knife_mesh.material).shader_id = geometry_shader->program;
     
+    BoneTracker& tracker = ECS.createComponentForEntity<BoneTracker>(knife_id);
+    tracker.SetBone("Beta_Joints", "mixamorig_RightHand");
+
     int light_ent = ECS.createEntity("Light");
     Light& light = ECS.createComponentForEntity<Light>(light_ent);
     light.direction = lm::vec3(-1.0f, -1.0f, -1.0f);
