@@ -38,7 +38,7 @@ void Game::init(int w, int h) {
     ball_mesh.material = graphics_system_.createMaterial();
     graphics_system_.getMaterial(ball_mesh.material).shader_id = phong_shader->program;
     
-    Parsers::parseAnimation("data/assets/bounce2.anim");
+    Parsers::parseAnimation("data/assets/bounce2.anim"); 
     
     int plane_ent = ECS.createEntity("plane");
     ECS.getComponentFromEntity<Transform>(plane_ent).translate(0, -1.0f, 0);
